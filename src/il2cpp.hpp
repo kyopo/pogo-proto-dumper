@@ -374,12 +374,12 @@ namespace il2cpp
 
 			if (header.sanity != 0xfab11baf)
 			{
-				throw std::exception("File does not have valid header");
+				throw std::runtime_error("File does not have valid header");
 			}
 
 			if (header.version != 21)
 			{
-				throw std::exception("Metadata is described by unsupported version");
+				throw std::runtime_error("Metadata is described by unsupported version");
 			}
 
 			// Read the file binary into corresponding arrays of structs

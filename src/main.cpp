@@ -35,12 +35,12 @@ int main(int argc, char* argv[])
 	{
 		if (!is_little_endian())
 		{
-			throw exception("System must be little-endian");
+			throw runtime_error("System must be little-endian");
 		}
 
 		if (argc != 2)
 		{
-			throw exception("Usage: umd path/to/global-metadata.dat");
+			throw runtime_error("Usage: umd path/to/global-metadata.dat");
 		}
 
 		ifstream global_metdata(argv[1], ios::binary);
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 		}
 		if (game_image == nullptr)
 		{
-			throw exception("Unable to find \"Assembly-CSharp.dll\" image");
+			throw runtime_error("Unable to find \"Assembly-CSharp.dll\" image");
 		}
 
 		// Keep track of types referenced by fields to find nested enumerations
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 			for (unsigned j = image->typeStart; j < image->typeStart + image->typeCount; j++)
 			{
 				auto type = &metadata.typeDefinitions[j];
-				type_index_mapping.insert_or_assign(type->byvalTypeIndex, j);
+				type_index_mapping.emplace(type->byvalTypeIndex, j);
 			}
 		}
 
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 
 						if (STRING(metadata, metadata.typeDefinitions[field_default_value->typeIndex].nameIndex) != "Byte")
 						{
-							throw exception(("Field default value is not a byte (typeIndex=" + to_string(field_default_value->typeIndex) + ")").c_str());
+							throw runtime_error(("Field default value is not a byte (typeIndex=" + to_string(field_default_value->typeIndex) + ")").c_str());
 						}
 
 						element_value = metadata.fieldAndParameterDefaultValueData[field_default_value->dataIndex];
@@ -150,7 +150,7 @@ int main(int argc, char* argv[])
 
 						if (STRING(metadata, metadata.typeDefinitions[field_default_value->typeIndex].nameIndex) != "Byte")
 						{
-							throw exception(("Field default value is not a byte (typeIndex=" + to_string(field_default_value->typeIndex) + ")").c_str());
+							throw runtime_error(("Field default value is not a byte (typeIndex=" + to_string(field_default_value->typeIndex) + ")").c_str());
 						}
 
 						proto_field_number = metadata.fieldAndParameterDefaultValueData[field_default_value->dataIndex];
@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
 
 							if (STRING(metadata, metadata.typeDefinitions[field_default_value->typeIndex].nameIndex) != "Byte")
 							{
-								throw exception(("Field default value is not a byte (typeIndex=" + to_string(field_default_value->typeIndex) + ")").c_str());
+								throw runtime_error(("Field default value is not a byte (typeIndex=" + to_string(field_default_value->typeIndex) + ")").c_str());
 							}
 
 							element_value = metadata.fieldAndParameterDefaultValueData[field_default_value->dataIndex];
